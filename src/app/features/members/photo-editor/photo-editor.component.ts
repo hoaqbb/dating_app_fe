@@ -5,14 +5,14 @@ import { environment } from '../../../../environments/environment.development';
 import { AccountService } from '../../../core/services/account.service';
 import { User } from '../../../models/user';
 import { take } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { MembersService } from '../../../core/services/members.service';
 import { Photo } from '../../../models/photo';
 
 @Component({
   selector: 'app-photo-editor',
   standalone: true,
-  imports: [FileUploadModule, CommonModule],
+  imports: [FileUploadModule, CommonModule, NgIf],
   templateUrl: './photo-editor.component.html',
   styleUrl: './photo-editor.component.css'
 })
@@ -55,8 +55,8 @@ export class PhotoEditorComponent implements OnInit{
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: this.baseUrl + 'users/add-photo',
-      authToken: 'Bearer ' + this.user.token,
+      url: this.baseUrl + '/api/User/add-photo',
+      authToken: 'Bearer ' + this.user?.token,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
@@ -70,8 +70,13 @@ export class PhotoEditorComponent implements OnInit{
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if(response) {
-        const photo = JSON.parse(response);
+        const photo: Photo = JSON.parse(response);
         this.member.photos.push(photo);
+        if(photo.isMain) {
+          this.user.photoUrl = photo.url;
+          this.member.photoUrl = photo.url;
+          this.accountService.setCurrentUser(this.user);
+        }
       }
     }
   }
