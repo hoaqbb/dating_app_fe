@@ -4,13 +4,15 @@ import { MembersService } from '../../../core/services/members.service';
 import { ActivatedRoute } from '@angular/router';
 import { TabsModule} from 'ngx-bootstrap/tabs'
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryModule, NgxGalleryOptions } from '@kolkov/ngx-gallery';
+import { DatePipe } from '@angular/common';
+import { TimeagoModule } from 'ngx-timeago';
 
 @Component({
   selector: 'app-member-detail',
   standalone: true,
-  imports: [TabsModule, NgxGalleryModule],
+  imports: [TabsModule, NgxGalleryModule, DatePipe, TimeagoModule],
   templateUrl: './member-detail.component.html',
-  styleUrl: './member-detail.component.css'
+  styleUrl: './member-detail.component.css',
 })
 export class MemberDetailComponent implements OnInit{
   member: Member;
