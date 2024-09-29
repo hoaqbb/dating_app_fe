@@ -1,4 +1,4 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +8,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toastr = inject(ToastrService);
   return next(req).pipe(
-    catchError(error => {
+    catchError((error: HttpErrorResponse) => {
       if(error) {
         switch (error.status) {
           case 400:
@@ -20,13 +20,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 }
               }
               throw modalStateErrors.flat();
+            } else if(typeof(error.error) === 'object') {
+                toastr.error(error.statusText, error.status.toString());
             } else {
-              toastr.error(error.statusText, error.status);
+              toastr.error(error.error, error.status.toString());
             }
             break;
 
           case 401:
-            toastr.error('Unauthorized', error.status);
+            toastr.error('Unauthorized', error.status.toString());
             break;
 
           case 404:
