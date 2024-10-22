@@ -5,6 +5,7 @@ import { User } from './models/user';
 import { AccountService } from './core/services/account.service';
 import { HomeComponent } from "./features/home/home.component";
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-root',
