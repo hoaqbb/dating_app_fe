@@ -3,18 +3,24 @@ import { Member } from '../../../models/member';
 import { RouterModule } from '@angular/router';
 import { MembersService } from '../../../core/services/members.service';
 import { ToastrService } from 'ngx-toastr';
+import { PresenceService } from '../../../core/services/presence.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-member-card',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, AsyncPipe],
   templateUrl: './member-card.component.html',
   styleUrl: './member-card.component.css'
 })
 export class MemberCardComponent implements OnInit{
   @Input() member: Member;
 
-  constructor(private memberService: MembersService, private toastr: ToastrService) { }
+  constructor(
+    private memberService: MembersService, 
+    private toastr: ToastrService, 
+    public presenceService: PresenceService
+  ) { }
 
   ngOnInit(): void {
     

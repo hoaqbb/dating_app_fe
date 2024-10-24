@@ -3,11 +3,12 @@ import { Message } from '../../../models/message';
 import { MessageService } from '../../../core/services/message.service';
 import { TimeagoModule } from 'ngx-timeago';
 import { FormsModule, NgForm } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-member-messages',
   standalone: true,
-  imports: [TimeagoModule, FormsModule],
+  imports: [TimeagoModule, FormsModule, AsyncPipe],
   templateUrl: './member-messages.component.html',
   styleUrl: './member-messages.component.css'
 })
@@ -17,14 +18,13 @@ export class MemberMessagesComponent implements OnInit{
   @Input() username: string;
   messageContent: string;
 
-  constructor(private messageService: MessageService) {}
+  constructor(public messageService: MessageService) {}
 
   ngOnInit(): void {
   }
   
   sendMessage() {
-    this.messageService.sendMessage(this.username, this.messageContent).subscribe(message => {
-      this.messages.push(message);
+    this.messageService.sendMessage(this.username, this.messageContent).then(() => {
       this.messageForm.reset();
     });
   }

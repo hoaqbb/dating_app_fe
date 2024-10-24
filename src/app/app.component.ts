@@ -6,6 +6,7 @@ import { AccountService } from './core/services/account.service';
 import { HomeComponent } from "./features/home/home.component";
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { PresenceService } from './core/services/presence.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 export class AppComponent implements OnInit{
   title = 'dating_app_fe';
 
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService, private presenceService: PresenceService) {}
 
   ngOnInit(): void {
     this.setCurrentUser();
@@ -25,6 +26,10 @@ export class AppComponent implements OnInit{
   
   setCurrentUser(){
     const user: User = JSON.parse(localStorage.getItem('user'));
-    this.accountService.setCurrentUser(user);
+    if(user) {
+      this.accountService.setCurrentUser(user);
+      this.presenceService.createHubConnection(user);
+    }
+    
   }
 }
